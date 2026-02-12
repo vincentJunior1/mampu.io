@@ -69,6 +69,12 @@ func (r *coreBankingService) InitRoutes() error {
 		MaxAge:           12 * time.Hour,
 	}))
 
+	inquiry := r.engine.Group("/inquiry")
+	{
+		inquiry.GET("/:userID", r.inquiry.GetBalanceByUserID)
+		inquiry.POST("/withdraw", r.inquiry.WithdrawByUserID)
+	}
+
 	if err := r.server.StartServer(); err != nil {
 		return err
 	}

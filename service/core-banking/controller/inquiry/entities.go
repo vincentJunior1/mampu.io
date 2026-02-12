@@ -1,12 +1,14 @@
 package inquiry
 
 import (
-	entitiesCore "core-system/core/entities/core-banking"
 	usecase "core-system/service/core-banking/usecase/inquiry"
+
+	"github.com/gin-gonic/gin"
 )
 
 type ControllerInterface interface {
-	entitiesCore.CoreBankingInterface
+	GetBalanceByUserID(ctx *gin.Context)
+	WithdrawByUserID(ctx *gin.Context)
 }
 
 type controller struct {
