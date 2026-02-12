@@ -3,6 +3,9 @@ package getenv
 import (
 	"os"
 	"strconv"
+
+	"github.com/joho/godotenv"
+	logs "github.com/sirupsen/logrus"
 )
 
 func Getenv[T any](name string) T {
@@ -26,4 +29,13 @@ func Getenv[T any](name string) T {
 	}
 
 	return result.(T)
+}
+
+func LoadEnv(filepath string) error {
+	if err := godotenv.Load(".env"); err != nil {
+		logs.Fatalf("[!] Error Load Env: %+v", err)
+		return err
+	}
+
+	return nil
 }

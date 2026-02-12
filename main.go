@@ -1,21 +1,19 @@
 package main
 
 import (
+	"core-system/core/utils/getenv"
 	corebanking "core-system/service/core-banking"
 	"os"
 	"os/signal"
 	"syscall"
 
 	logs "github.com/sirupsen/logrus"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	if err := godotenv.Load(".env"); err != nil {
+	if err := getenv.LoadEnv(".env"); err != nil {
 		panic(err)
 	}
-
 	coreBankingSvc := corebanking.InitServiceCoreBanking()
 	serverErr := make(chan error, 1)
 	go func() {

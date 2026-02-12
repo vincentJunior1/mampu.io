@@ -2,6 +2,7 @@ package corebanking
 
 import (
 	entitiesServer "core-system/core/entities/server"
+	"core-system/core/utils/database/postgres"
 	"core-system/core/utils/getenv"
 	"core-system/core/utils/server"
 	"core-system/service/core-banking/controller/inquiry"
@@ -27,7 +28,15 @@ func InitServiceCoreBanking() CoreBankingInterface {
 	if errServer != nil {
 		logs.Fatalf("[!] Error Initialize Server: %+v", errServer)
 	}
-	repo := repository.InitRepo()
+	repo := repository.InitRepo(postgres.ConfigPostgres{
+		Username: getenv.Getenv[string]("USER_DATABASE"),
+		Password: getenv.Getenv[string]("PASS_DATABASE"),
+		Host:     getenv.Getenv[string]("HOST_DATABASE"),
+		Port:     getenv.Getenv[string]("PORT_DATABASE"),
+		DbName:   getenv.Getenv[string]("DB_DATABASE"),
+		Debug:    getenv.Getenv[string]("DEBUG_DATABASE"),
+		Mode:     getenv.Getenv[string]("LOG_MODE_DATABASE"),
+	})
 	usecase, errUc := usecaseInquiry.InitUsecase(usecaseInquiry.UsecaseConfig{
 		Repo: repo,
 	})
