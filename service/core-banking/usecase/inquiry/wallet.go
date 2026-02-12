@@ -30,6 +30,10 @@ func (u *usecase) WithdrawByUserID(ctx *gin.Context, payload entities.WithdrawRe
 
 	if err != nil {
 		logrus.Errorln("[*] Error Withdraw: ", err)
+		// Disini bisa di buat code khusus yang bisa di detect ketika Insufficient Balance
+		if err.Error() == "Insufficient Balance" {
+			return resUtil.NewResponseWithError(http.StatusBadRequest, err.Error())
+		}
 		return resUtil.NewResponseWithError(http.StatusBadRequest, "Unprocessable Entity")
 	}
 

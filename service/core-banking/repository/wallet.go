@@ -3,6 +3,7 @@ package repository
 import (
 	"core-system/service/core-banking/repository/entities"
 	usecaseEntities "core-system/service/core-banking/usecase/entities"
+	"errors"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm/clause"
@@ -27,6 +28,9 @@ func (r *repo) WithdrawByUserID(ctx *gin.Context, payload usecaseEntities.Withdr
 		return nil, err
 	}
 
+	if entity.Balance < payload.Amount {
+		return nil, errors.New("Insufficient Balance")
+	}
 	entity.Balance -= payload.Amount
 
 	if err := tx.WithContext(ctx).Save(&entity).Error; err != nil {
