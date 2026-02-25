@@ -25,7 +25,7 @@ func Getenv[T any](name string) T {
 		v, _ := strconv.ParseFloat(value, 64)
 		result = v
 	default:
-		panic("unsupported type")
+		logs.Fatalf("[!] unsupported type: %T", any(*new(T)))
 	}
 
 	return result.(T)
