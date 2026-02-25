@@ -1,9 +1,11 @@
 package corebanking
 
 import (
+	"context"
 	entitiesServer "core-system/core/entities/server"
 	"core-system/core/utils/database/postgres"
 	"core-system/core/utils/getenv"
+	"core-system/core/utils/logger"
 	"core-system/core/utils/server"
 	"core-system/service/core-banking/controller/inquiry"
 	repository "core-system/service/core-banking/repository"
@@ -17,6 +19,12 @@ import (
 
 func InitServiceCoreBanking() CoreBankingInterface {
 	engine := gin.New()
+
+	log := logger.NewLoggerService(&logger.Config{
+		Level: "",
+		Color: true,
+	})
+
 	server, errServer := server.InitServer(entitiesServer.ServerConfig{
 		Port:         getenv.Getenv[string]("PORT"),
 		Handler:      engine,
@@ -46,6 +54,7 @@ func InitServiceCoreBanking() CoreBankingInterface {
 	}
 	inquiryCtrl, errCtrl := inquiry.InitInquiryController(inquiry.ControllerConfig{
 		Usecase: usecase,
+		Log:     log,
 	})
 
 	if errCtrl != nil {
@@ -80,4 +89,8 @@ func (r *coreBankingService) InitRoutes() error {
 	}
 
 	return nil
+}
+
+func (r *coreBankingService) Stop(ctx context.Context) error {
+	return r.server.ShutdownServer(ctx)
 }

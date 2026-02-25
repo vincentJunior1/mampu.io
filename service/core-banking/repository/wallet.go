@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"core-system/service/core-banking/repository/entities"
 	usecaseEntities "core-system/service/core-banking/usecase/entities"
 	"errors"
@@ -18,7 +19,7 @@ func (r *repo) GetBalanceByUserID(ctx *gin.Context, userID int) (entities.Wallet
 	return entity, query.Error
 }
 
-func (r *repo) WithdrawByUserID(ctx *gin.Context, payload usecaseEntities.WithdrawRequest) (*entities.Wallet, error) {
+func (r *repo) WithdrawByUserID(ctx context.Context, payload usecaseEntities.WithdrawRequest) (*entities.Wallet, error) {
 	var entity entities.Wallet
 
 	tx := r.db.Begin()
@@ -29,6 +30,7 @@ func (r *repo) WithdrawByUserID(ctx *gin.Context, payload usecaseEntities.Withdr
 	}
 
 	if entity.Balance < payload.Amount {
+		tx.Rollback()
 		return nil, errors.New("Insufficient Balance")
 	}
 	entity.Balance -= payload.Amount

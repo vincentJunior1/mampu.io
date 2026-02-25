@@ -1,6 +1,10 @@
 package server
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 type config struct {
 	port         string
@@ -8,4 +12,5 @@ type config struct {
 	idleTimeout  int // in second
 	readTimeout  int // in second
 	writeTimeout int // in second
+	server       *http.Server
 }

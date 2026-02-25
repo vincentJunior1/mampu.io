@@ -1,6 +1,7 @@
 package corebanking
 
 import (
+	"context"
 	"core-system/core/entities/server"
 	"core-system/service/core-banking/controller/inquiry"
 
@@ -15,4 +16,5 @@ type coreBankingService struct {
 
 type CoreBankingInterface interface {
 	InitRoutes() error
+	Stop(ctx context.Context) error
 }

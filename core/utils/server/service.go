@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	entitiesServer "core-system/core/entities/server"
 	"net/http"
 	"time"
@@ -28,4 +29,8 @@ func (c *config) StartServer() error {
 
 	err := srv.ListenAndServe()
 	return err
+}
+
+func (c *config) ShutdownServer(ctx context.Context) error {
+	return c.server.Shutdown(ctx)
 }
